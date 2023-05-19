@@ -1,0 +1,173 @@
+{% extends 'articles/base.html' %}
+
+{% block content %}
+
+  <div class="container py-5">
+
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="card" id="chat3" style="border-radius: 15px;">
+          <div class="card-body">
+
+            <div class="row">
+              <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0 chat">
+
+                <div class="p-3">
+
+                  <div class="input-group rounded mb-3">
+                    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                      aria-describedby="search-addon" />
+                    <span class="input-group-text border-0" id="search-addon">
+                      <i class="fas fa-search"></i>
+                    </span>
+                  </div>
+
+                  <div data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px">
+                    <ul class="list-unstyled mb-0">
+
+
+                      {% for profile in profiles_message %}
+                        {% if profile.recipient.id != user.pk%}
+                          {% if profile.recipient.id == pk_selected %}
+                          <li class="p-2 border-bottom btn-profile-selected">
+                            {% else %}
+                            <li class="p-2 border-bottom btn-profile">
+                            {% endif %}
+                            <a href="{% url 'message' profile.recipient.id %}" class="d-flex justify-content-between">
+                              <div class="d-flex flex-row">
+                                {% if profile.recipient.profile.photo %}
+                                <div>
+                                  <img
+                                    src="{{ profile.recipient.profile.photo.url }}"
+                                    alt="avatar" class="d-flex align-self-center me-3" width="60">
+                                  <span class="badge bg-success badge-dot"></span>
+                                </div>
+                            {% endif %}
+                            <div class="pt-1">
+                              <p class="fw-bold mb-0">{{ profile.recipient }}</p>
+                              <p class="small text-muted">{{ profile|truncatechars:30 }}</p>
+                            </div>
+                          </div>
+                          <div class="pt-1">
+                            <p class="small text-muted mb-1">{{ profile.time_create|date:"H:i" }}</p>
+                            <span class="small text-muted mb-1">{{ profile.time_create|date:"j E Y" }}</span>
+                          </div>
+                        </a>
+                      </li>
+                      {% else %}
+                      {% if profile.sender.id == pk_selected %}
+                          <li class="p-2 border-bottom btn-profile-selected">
+                            {% else %}
+                            <li class="p-2 border-bottom btn-profile">
+                            {% endif %}
+                        <a href="{% url 'message' profile.sender.id %}" class="d-flex justify-content-between">
+                          <div class="d-flex flex-row">
+                            {% if profile.sender.profile.photo %}
+                            <div>
+                              <img
+                                src="{{ profile.sender.profile.photo.url }}"
+                                alt="avatar" class="d-flex align-self-center me-3" width="60">
+                              <span class="badge bg-success badge-dot"></span>
+                            </div>
+                            {% endif %}
+                            <div class="pt-1">
+                              <p class="fw-bold mb-0">{{ profile.sender }}</p>
+                              <p class="small text-muted">{{ profile|truncatechars:30 }}</p>
+                            </div>
+                          </div>
+                          <div class="pt-1">
+                            <p class="small text-muted mb-1">{{ profile.time_create|date:"H:i" }}</p>
+                            <span class="small text-muted mb-1">{{ profile.time_create|date:"j E Y" }}</span>
+                          </div>
+                        </a>
+                      </li>
+                      {% endif %}
+                      {% endfor %}
+
+
+                    </ul>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="col-md-6 col-lg-7 col-xl-8 chat">
+                <a href="{{ user_sender.profile.get_absolute_url }}" >
+                <div  class="col-md-12 col-lg-12 col-xl-12" style="background: #bbbbbb;">
+                  {% if user_sender.profile.photo %}
+                  <img
+                    src="{{ user_sender.profile.photo.url }}"
+                    alt="avatar"  width="60">
+                  {% endif %}
+                  <span style="color: black;"><b>{{ user_sender }}</b> | Кафедра: {{ user_sender.profile.department }}, Группа: {{ user_sender.profile.group }}</span>
+                </div>
+                  </a>
+                <hr>
+
+                <div class="pt-3 pe-3" data-mdb-perfect-scrollbar="true"
+                  style="position: relative; height: 400px">
+
+                  {% for message in messages %}
+
+                  {% if message.sender.id != user.pk %}
+                  <div class="d-flex flex-row justify-content-start">
+                    {% if message.sender.profile.photo %}
+                    <img src="{{ message.sender.profile.photo.url }} "
+                      alt="avatar 1" style="width: 45px; height: 100%;">
+                    {% endif %}
+                    <div>
+                      {% if message.photo %}
+                      <img src="{{ message.photo.url }}" width="300" height="150">
+                      {% endif %}
+                      <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">{{ message }}</p>
+                      <p class="small ms-3 mb-3 rounded-3 text-muted float-end">{{ message.time_create }}</p>
+                    </div>
+                  </div>
+
+                  {% else %}
+
+                  <div class="d-flex flex-row justify-content-end">
+                    <div>
+                      {% if message.photo %}
+                      <img src="{{ message.photo.url }}" width="300" height="150">
+                      {% endif %}
+                      <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">{{ message }}</p>
+                      <p class="small me-3 mb-3 rounded-3 text-muted">{{ message.time_create }}</p>
+                    </div>
+                    {% if message.sender.profile.photo %}
+                    <img src="{{ message.sender.profile.photo.url }}"
+                      alt="avatar 1" style="width: 45px; height: 100%;">
+                    {% endif %}
+                  </div>
+
+                  {% endif %}
+                  {% endfor %}
+              </div>
+            </div>
+              <form method="post" enctype="multipart/form-data">
+                <div class="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2">
+                  {% if user.profile.photo %}
+                  <img src="{{ user.profile.photo.url }}"
+                    alt="avatar 3" style="width: 40px; height: 100%;">
+                  {% endif %}
+
+                    {% csrf_token %}
+                    {{ form.message }}
+                    {{ form.photo }}
+<!--                    <button type="button" class="ms-1 text-muted" id="file"><i class="fas fa-paperclip"></i></button>-->
+                    <button class="ms-3" type="submit"><i class="fas fa-paper-plane"></i></button>
+                  </div>
+                </form>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+    </div>
+  </div>
+
+
+{% endblock %}

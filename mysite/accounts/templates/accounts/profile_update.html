@@ -1,0 +1,18 @@
+{% extends 'articles/base.html' %}
+
+{% block content %}
+    <br>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+        {% for f in user_form %}
+    <p><label class="form-label margin-r">{{f.label}}: </label>{{f}}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endfor %}
+        {% for f in profile_form %}
+    <p><label class="form-label margin-r">{{f.label}}:</label>{{f}}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endfor %}
+
+      <button type="submit">Сохранить</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'articles/base.html' %}
+
+{% block search %}
+    <div class="px-3 py-2 border-bottom mb-3">
+      <div class="container d-flex flex-wrap justify-content-center">
+        <form class="col-12 mb-2 mb-lg-0 inline nav-link" role="search" method="get">
+          <input name="search" type="text" class="form-control center" placeholder="Search..." aria-label="Search">
+        </form>
+      </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="btn-group col-md-6 offset-md-3 " role="group">
+
+        {% if cat_selected == 0 %}
+            <a class="btn btn-outline-secondary active">Все</a>
+        {% else %}
+            <a href="{% url 'home' %}"  class="btn btn-outline-secondary">Все</a>
+        {% endif %}
+        {% for cat in cats %}
+            {% if cat_selected == cat.pk %}
+                <a class="btn btn-outline-secondary active">{{ cat.title }}</a>
+            {% else %}
+                <a href="{{cat.get_absolute_url }}" class="btn btn-outline-secondary">{{ cat.title }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+        <br>
+    {% for article in articles %}
+        <div class="col-5 container d-flex align-items-center justify-content-center">
+          <div class="card shadow-sm">
+              {% if article.photo %}
+              <img src="{{ article.photo.url }}">
+              {% endif %}
+            <div class="card-body card-body1">
+                <h3 class="card-text">{{ article.title }}</h3>
+              <p class="card-text">{{ article.content }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="{% url 'message' article.user.pk %}" class="btn btn-sm btn-outline-secondary">Откликнуться</a>
+                </div>
+                  <small class="text-muted">{{ article.cat }}</small>
+
+              </div>
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <label class="text-muted">Автор публикации: <a class="autor" href="{{ article.user.profile.get_absolute_url }}"><small>{{ article.user }}</small></a></label>
+                    <small class="text-muted">{{ article.time_create }}</small>
+                </div>
+
+            </div>
+          </div>
+        </div>
+        <br>
+
+    {% endfor %}
+
+{% endblock %}

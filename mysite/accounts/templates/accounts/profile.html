@@ -1,0 +1,139 @@
+{% extends 'articles/base.html' %}
+
+{% block content %}
+<div class="row">
+<div class="col-md-8">
+<br>
+              <div class="card mb-3">
+                <br>
+                  <div class="d-flex flex-column align-items-center text-center">
+                      {% if user.profile.photo %}
+                    <img src="{{ user.profile.photo.url }}" alt="Admin" class="rounded-circle" width="150">
+                      {% endif %}
+                    <div class="mt-3">
+                      <h4>{{ user.username }}</h4>
+                    </div>
+                <div class="card-body1">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Фамилия</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{ user.last_name }}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Имя</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{ user.first_name }}
+                    </div>
+                  </div>
+                  <hr>
+
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Отчество</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{ user.profile.patronymic }}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Email</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{ user.email }}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Кафедра</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{ user.profile.department }}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Группа</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{ user.profile.group }}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <a class="btn btn-info" href="{% url 'profile_update' %}">Редактировать</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+</div>
+
+<div class="col-md-3 pull-right">
+
+
+<br>
+<div class="card mb-2">
+    <div class="card-body">
+      <h6 class="mb-0">Публикации в обработке ⏳</h6>
+       </div>
+  <hr>
+    <div>
+      <ul>
+        {% for article in articles %}
+          {% if article.acceptance_stage == 0 %}
+             <li>{{ article.title }}</li>
+          {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+  <br>
+<div class="card mb-2">
+    <div class="card-body">
+      <h6 class="mb-0">Публикации одобренные ✅</h6>
+       </div>
+  <hr>
+    <div>
+      <ul>
+           {% for article in articles %}
+          {% if article.acceptance_stage == 1%}
+             <li>{{ article.title }}</li>
+          {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+  <br>
+<div class="card mb-2">
+    <div class="card-body">
+      <h6 class="mb-0">Публикации в отказе ❌</h6>
+       </div>
+  <hr>
+    <div>
+      <ul>
+       {% for article in articles %}
+          {% if article.acceptance_stage == 2 %}
+             <li>{{ article.title }}</li>
+          {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+</div>
+  </div>
+
+{% endblock %}

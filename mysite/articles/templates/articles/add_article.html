@@ -1,0 +1,44 @@
+{% extends 'articles/base.html' %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<div class="form" >
+<h1>{{ title }}</h1>
+<br>
+<form method="post" enctype="multipart/form-data">
+
+
+    <div class="list-group mx-0 col-6">
+        {% for f in form.cat %}
+        <label class="list-group-item d-flex gap-2">
+            {{ f.tag }}
+          <span>
+              {{ f.choice_label }}
+
+              {% for c in cats %}
+                  {% if c.title_single == f.choice_label %}
+                <small class="d-block text-muted">{{ c.description }}</small>
+                  {% endif %}
+              {% endfor %}
+
+          </span>
+        </label>
+        {% endfor %}
+    </div>
+
+    <br>
+    {% csrf_token %}
+    {% for f in form %}
+    {% if f != form.cat %}
+    <p><label class="form-label">{{f.label}}:</label>{{f}}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endif %}
+    {% endfor %}
+
+    <button type="submit">Отправить</button>
+</form>
+</div>
+{% else %}
+<h1>Авторизуйтесь пожалуйста!</h1>
+{% endif %}
+{% endblock %}

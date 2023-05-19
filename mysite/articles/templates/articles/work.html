@@ -1,0 +1,54 @@
+{% extends 'articles/base.html' %}
+
+{% block content %}
+{% if request.user.is_staff %}
+{% if not article %}
+    <h3>Нет работы</h3>
+{% else %}
+<br>
+<div class="col-5 container d-flex align-items-center justify-content-center">
+          <div class="card shadow-sm">
+              {% if article.photo %}
+              <img src="{{ article.photo.url }}">
+              {% endif %}
+            <div class="card-body">
+                <h3 class="card-text">{{ article.title }}</h3>
+              <p class="card-text">{{ article.content }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+
+                </div>
+                  <small class="text-muted">{{ article.cat }}</small>
+
+              </div>
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <label class="text-muted">Автор публикации: <a class="autor" href="{{ article.user.profile.get_absolute_url }}"><small>{{ article.user }}</small></a></label>
+                    <small class="text-muted">{{ article.time_create }}</small>
+                </div>
+
+            </div>
+          </div>
+        </div>
+        <br>
+
+        <div class="row">
+        <div class="w-50 mx-auto container d-flex align-items-center justify-content-center">
+            <form action="{% url 'update_acceptance' %}" method="post">
+                {% csrf_token %}
+
+                    <button type="submit" class="mx-auto btn btn-danger btn-lg" name="result" value="2">Отказать</button>
+                    <a class=" mx-auto btn btn-primary btn-lg" href="{% url 'update_article' article.pk %}" role="button">Редактировать</a>
+                    <button type="submit" class="mx-auto btn btn-success btn-lg " name="result" value="1" >Принять</button>
+
+
+            </form>
+
+        </div>
+            </div>
+
+{% endif %}
+{% else %}
+<h1>У вас нет доступа</h1>
+{% endif %}
+{% endblock %}
