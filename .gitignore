@@ -98,6 +98,8 @@ ENV/
 # mkdocs documentation
 /site
 
+vcs.xml
+
 # mypy
 .mypy_cache/
 

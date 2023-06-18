@@ -53,6 +53,7 @@ class Profile(LoginRequiredMixin, TemplateView):
         articles = Articles.objects.values('title', 'acceptance_stage', 'user').filter(user=self.request.user.pk)
         context['articles'] = articles
         context['title'] = "Профиль"
+        return context
 
 
 @login_required
